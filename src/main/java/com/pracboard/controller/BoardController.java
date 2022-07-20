@@ -26,8 +26,7 @@ public class BoardController {
 
     @GetMapping("/write")
     public String write(Model m){
-        m.addAttribute("mode", "new");
-        return "board";
+        return "boardWrite";
     }
 
     @PostMapping("/write")
@@ -45,7 +44,7 @@ public class BoardController {
     @PostMapping("/remove")
     public String remove(Integer bno, Integer page, Integer pageSize, Model m, RedirectAttributes rattr, HttpSession session){
 
-        String writer = "asdf";
+        String reporter = "asdf";
         String msg = "DEL_OK";
         String msg2 = "DEL_ERR";
         try {
@@ -54,7 +53,7 @@ public class BoardController {
 
             Map map = new HashMap();
             map.put("bno", bno);
-            map.put("writer", writer);
+            map.put("reporter", reporter);
 
             int rowCnt = boardService.remove(map);
 
@@ -112,7 +111,7 @@ public class BoardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "board";
+        return "boardDetail";
     }
 
 
@@ -120,6 +119,32 @@ public class BoardController {
     public String home(HttpServletRequest request) {
 
         return "index";
+    }
+
+    @GetMapping("/modify")
+    public String modify(Integer bno, Integer page, Integer pageSize, Model m){
+        try {
+            BoardDto boardDto = boardService.read(bno);
+            m.addAttribute("boardDto", boardDto);
+            m.addAttribute("page", page);
+            m.addAttribute("pageSize", pageSize);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "boardModify";
+    }
+
+    @PostMapping("/modify")
+    public String modify(BoardDto boardDto){
+
+        System.out.println(boardDto);
+        try {
+            boardService.modify(boardDto);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "redirect:/board/list";
     }
 
     private boolean loginCheck(HttpServletRequest request) {

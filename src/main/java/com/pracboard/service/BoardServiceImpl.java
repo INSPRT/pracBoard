@@ -36,7 +36,6 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardDto read(Integer bno) throws Exception {
         BoardDto boardDto = boardMapper.select(bno);
-        boardMapper.increaseViewCnt(bno);
 
         return boardDto;
     }

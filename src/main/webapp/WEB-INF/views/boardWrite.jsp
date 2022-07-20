@@ -9,8 +9,6 @@
 <head>
     <meta charset="UTF-8">
     <title>fastcampus</title>
-    <link rel="stylesheet" type="text/css" href="/css/menu.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <style>
         * {
@@ -65,16 +63,7 @@
     </style>
 </head>
 <body>
-<div id="menu">
-    <ul>
-        <li id="logo">fastcampus</li>
-        <li><a href="<c:url value='/'/>">Home</a></li>
-        <li><a href="/board/list">Board</a></li>
-        <li><a href="/login/login">login</a></li>
-        <li><a href="/register/add">Sign in</a></li>
-        <li><a href=""><i class="fas fa-search small"></i></a></li>
-    </ul>
-</div>
+
 <script>
     let msg = "${msg}";
 
@@ -82,26 +71,27 @@
     if(msg=="MOD_ERR") alert("게시물 수정에 실패하였습니다. 다시 시도해 주세요.");
 </script>
 <div class="container">
-    <h2 class="writing-header">게시판 ${mode=="new" ? "글쓰기" : "읽기"}</h2>
     <form id="form" class="frm" action="" method="post">
-        <input type="hidden" name="bno" value="${boardDto.bno}">
-        <input type="text" name="writer" value="${boardDto.writer}">
 
-        <input name="title" type="text" value="${boardDto.title}" placeholder="  제목을 입력해 주세요." ${mode=="new" ? "" : "readonly='readonly'"}>            <br>
-        <textarea name="content" rows="20" placeholder=" 내용을 입력해 주세요." ${mode=="new" ? "" : "readonly='readonly'"}>${boardDto.content}</textarea>      <br>
+        <table border="1">
+            <tr>
+                <td>희망 교육명</td>
+                <td colspan="3"><input type="text" name="title" placeholder="내용을 입력하세요."></td>
+            </tr>
+            <tr>
+                <td>이메일</td>
+                <td><input type="text" name="email" placeholder="내용을 입력하세요."></td>
+                <td>핸드폰 번호</td>
+                <td><input type="text" name="mobile" placeholder="내용을 입력하세요."></td>
+            </tr>
+            <tr>
+                <td>희망 교육 내용 / 기타사항</td>
+                <td colspan="3"><textarea name="content" cols="50" rows="10" placeholder=" 내용을 입력해 주세요."></textarea></td>
+            </tr>
+        </table>
+        <button type="button" id="writeBtn"> 등록</button>
+        <button type="button" id="cancelBtn">취소</button>
 
-
-        <c:if test="${mode eq 'new'}">
-            <button type="button" id="writeBtn" class="btn btn-write"><i class="fa fa-pencil"></i> 등록</button>
-        </c:if>
-        <c:if test="${mode ne 'new'}">
-            <button type="button" id="writeNewBtn" class="btn btn-write"><i class="fa fa-pencil"></i> 글쓰기</button>
-        </c:if>
-<%--        <c:if test="${boardDto.writer eq loginId}">--%>
-            <button type="button" id="modifyBtn" class="btn btn-modify"><i class="fa fa-edit"></i> 수정</button>
-            <button type="button" id="removeBtn" class="btn btn-remove"><i class="fa fa-trash"></i> 삭제</button>
-<%--        </c:if>--%>
-        <button type="button" id="listBtn" class="btn btn-list"><i class="fa fa-bars"></i> 목록</button>
     </form>
 </div>
 <script>
@@ -120,9 +110,10 @@
             }
             return true;
         }
-        $("#writeNewBtn").on("click", function(){
-            location.href="/board/write";
+        $("#cancelBtn").on("click", function(){
+            location.href="/board/list";
         });
+
         $("#writeBtn").on("click", function(){
             let form = $("#form");
             form.attr("action", "/board/write");
@@ -130,23 +121,7 @@
             if(formCheck())
                 form.submit();
         });
-        $("#modifyBtn").on("click", function(){
-            let form = $("#form");
-            let readonly = $("input[name=title]", "#form").attr('readonly');
-            // 1. 읽기 상태이면, 수정 상태로 변경
-            if(readonly!=undefined) {
-                $(".writing-header").html("게시판 수정");
-                $("input[name=title]", "#form").attr('readonly', false);
-                $("textarea", "#form").attr('readonly', false);
-                $("#modifyBtn").html("<i class='fa fa-pencil'></i> 등록");
-                return;
-            }
-            // 2. 수정 상태이면, 수정된 내용을 서버로 전송
-            form.attr("action", "/board/modify");
-            form.attr("method", "post");
-            if(formCheck())
-                form.submit();
-        });
+
         $("#removeBtn").on("click", function(){
             if(!confirm("정말로 삭제하시겠습니까?")) return;
             let form = $("#form");

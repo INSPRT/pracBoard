@@ -12,9 +12,13 @@ import java.util.Date;
 public class BoardDto {
     private Integer bno;
     private String title;
+    private int like_cnt;
+    private Date report_date;
+    private String reporter;
     private String content;
-    private String writer;
-    private int view_cnt;
-    private int comment_cnt;
-    private Date reg_date;
+    private String email;
+    private String mobile;
+    private int is_pinned;
+
+
 }

@@ -5,20 +5,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>fastcampus</title>
+    <title></title>
     <link rel="stylesheet" type="text/css" href="/css/menu.css"/>
 </head>
 <body>
-<div id="menu">
-    <ul>
-        <li id="logo">fastcampus</li>
-        <li><a href="<c:url value='/'/>">Home</a></li>
-        <li><a href="/board/list">Board</a></li>
-        <li><a href="/login/login">login</a></li>
-        <li><a href="/register/add">Sign in</a></li>
-        <li><a href=""><i class="fas fa-search small"></i></a></li>
-    </ul>
-</div>
 <script>
     let msg = "${param.msg}";
     if(msg=="LIST_ERR")  alert("게시물 목록을 가져오는데 실패했습니다. 다시 시도해 주세요.");
@@ -29,22 +19,24 @@
     if(msg=="MOD_OK")    alert("성공적으로 수정되었습니다.");
 </script>
 <div style="text-align:center">
-    <button id="writeBtn" class="btn-write" onclick="location.href='/board/write'"><i class="fa fa-pencil"></i> 글쓰기</button>
+    <button id="writeBtn" onclick="location.href='/board/write'">신청하기</button>
     <table border="1">
         <tr>
             <th>번호</th>
-            <th>제목</th>
-            <th>이름</th>
-            <th>등록일</th>
-            <th>조회수</th>
+            <th>신청제목</th>
+            <th>좋아요</th>
+            <th>신청일</th>
+            <th>신청자</th>
+            <th>답변여부</th>
         </tr>
         <c:forEach var="board" items="${list}">
             <tr>
                 <td>${board.bno}</td>
                 <td><a href="/board/read?bno=${board.bno}&page=${page}&pageSize=${pageSize}">${board.title}</a></td>
-                <td>${board.writer}</td>
-                <td>${board.reg_date}</td>
-                <td>${board.view_cnt}</td>
+                <td>${board.like_cnt}</td>
+                <td>${board.report_date}</td>
+                <td>${board.reporter}</td>
+                <td>${board.is_pinned}</td>
             </tr>
         </c:forEach>
     </table>

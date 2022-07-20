@@ -12,24 +12,24 @@
     </delete>
 
     <delete id="delete" parameterType="map">
-        DELETE FROM board WHERE bno = #{bno} and writer = #{writer}
+        DELETE FROM board WHERE bno = #{bno} and reporter = #{reporter}
     </delete>
 
     <insert id="insert" parameterType="BoardDto">
         INSERT INTO board
-            (title, content, writer)
+            (title, email, mobile, content, reporter)
         VALUES
-            (#{title}, #{content}, #{writer})
+            (#{title}, #{email}, #{mobile}, #{content}, #{reporter})
     </insert>
 
     <select id="selectAll" resultType="BoardDto">
-        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        SELECT bno, title, like_cnt, report_date, reporter, content, email, mobile, is_pinned
         FROM board
-        ORDER BY reg_date DESC, bno DESC
+        ORDER BY report_date DESC, bno DESC
     </select>
 
     <sql id="selectFromBoard">
-        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        SELECT bno, title, like_cnt, report_date, reporter, content, email, mobile, is_pinned
         FROM board
     </sql>
 
@@ -40,27 +40,23 @@
 
     <select id="selectPage" parameterType="map" resultType="BoardDto">
         <include refid="selectFromBoard"/>
-        ORDER BY reg_date DESC, bno DESC
+        ORDER BY report_date DESC, bno DESC
         LIMIT #{offset}, #{pageSize}
     </select>
 
     <update id="update" parameterType="BoardDto">
         UPDATE board
-        SET   title = #{title}
-          , content = #{content}
-          , up_date = now()
+        SET   title = #{title},
+              email = #{email},
+              mobile = #{mobile},
+              content = #{content},
+              reporter = #{reporter}
         WHERE bno = #{bno}
     </update>
 
-    <update id="updateCommentCnt" parameterType="map">
+    <update id="increaseLikeCnt" parameterType="int">
         UPDATE board
-        SET   comment_cnt = comment_cnt + #{cnt}
-        WHERE bno = #{bno}
-    </update>
-
-    <update id="increaseViewCnt" parameterType="int">
-        UPDATE board
-        SET   view_cnt = view_cnt + 1
+        SET   like_cnt = like_cnt + 1
         WHERE bno = #{bno}
     </update>
 
